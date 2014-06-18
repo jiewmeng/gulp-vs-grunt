@@ -1,1 +1,4 @@
-script(src="bower_components/requirejs/require.js" data-main="app")
+if env === "production"
+	script(src="bower_components/requirejs/require.js" data-main="js/app-all")
+else
+	script(src="bower_components/requirejs/require.js" data-main="js/app")
