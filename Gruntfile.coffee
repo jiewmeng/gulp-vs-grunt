@@ -112,10 +112,16 @@ module.exports = (grunt) ->
 			html: ["dist/*.html"]
 
 		connect:
-			server:
+			development:
 				options:
 					livereload: true
 					base: "dist"
+			production:
+				options:
+					livereload: false
+					base: "dist"
+					keepalive: true
+
 
 		watch:
 			options:
@@ -162,13 +168,13 @@ module.exports = (grunt) ->
 
 	grunt.registerTask "development-watch-server", [
 		"build-development"
-		"connect"
+		"connect:development"
 		"watch"
 	]
 
 	grunt.registerTask "production-server", [
 		"build-production"
-		"connect"
+		"connect:production"
 	]
 
 
