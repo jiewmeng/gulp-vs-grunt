@@ -10,5 +10,5 @@ require.config
 require ["jquery", "test/test", "bootstrap"], ($, test) ->
 
 	$ ->
-		console.log "it works hello world!"
+		console.log "it works hello world! YYY"
 		test()

@@ -15,7 +15,7 @@ uglify = require "gulp-uglify"
 usemin = require "gulp-usemin"
 rjsReplace = require "gulp-requirejs-replace-script"
 
-# delete dist directory
+# cleanup build files
 gulp.task "clean", (done) ->
 	rimraf "dist", done
 
@@ -39,6 +39,11 @@ gulp.task "optimized-js", ["copy-assets", "coffee"], ->
 		paths:
 			jquery: "../bower_components/jquery2/jquery"
 			bootstrap: "../bower_components/bootstrap/dist/js/bootstrap"
+		shim:
+			jquery:
+				exports: "jQuery"
+			bootstrap:
+				deps: ["jquery"]
 	}).pipe uglify()
 	.pipe gulp.dest("dist/js")
 
@@ -62,15 +67,6 @@ gulp.task "less", ->
 		.pipe less()
 		.pipe gulp.dest("dist/css")
 
-# concat css
-gulp.task "concat", ["copy-assets", "less"], ->
-	gulp.src([
-		"dist/bower_components/bootstrap/dist/css/bootstrap.css"
-		"dist/bower_components/bootstrap/dist/css/bootstrap-theme.css"
-		"dist/css/app.css"
-	]).pipe concat("app-all.css")
-	.pipe gulp.dest("dist/css")
-
 # optimize images
 gulp.task "imagemin", ->
 	gulp.src "src/assets/img/**/*"
@@ -85,7 +81,7 @@ gulp.task "usemin", ["production-jade"], ->
 		}).pipe gulp.dest("dist")
 
 # development build (separate files, unoptimized images)
-gulp.task "build-dev", ->
+gulp.task "build-development", ->
 	runSequence "clean", ["copy-assets", "coffee", "jade", "less"]
 
 # production build (concatinated, minified files, optimized images)
@@ -109,10 +105,6 @@ gulp.task "development-watch-server", ->
 
 	watch {name: "assets", glob: "src/assets/**/*"}
 		.pipe gulp.dest("dist")
-
-	watch {name: "images", glob: "src/assets/img"}
-		.pipe imagemin()
-		.pipe gulp.dest("dist/img")
 	
 	watch {name: "coffee", glob: "src/coffee/**/*.coffee"}
 		.pipe coffee({bare: true})
